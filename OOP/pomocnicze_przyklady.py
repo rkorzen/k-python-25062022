@@ -25,6 +25,9 @@ class Bonus:
     def __repr__(self):
         return f"{self.__class__} v: {self.value}"
 
+    def __add__(self, other):
+        return self.__class__(self.value + other.value)
+
 
 class ValueBonus(Bonus):
     order = 2
@@ -58,9 +61,18 @@ def second(x):
     return x[1]
 
 
-print(sorted(lista, key=lambda x: x[1]))
+# print(sorted(lista, key=lambda x: x[1]))
+#
+# print(sorted(lista, key=second))
+#
+#
+# print(help(sorted))
 
-print(sorted(lista, key=second))
+bonuses = {}
 
-
-print(help(sorted))
+bonuses[b1.__class__] = b1
+bonuses[b2.__class__] = b2
+print(bonuses)
+b3 = PercentBonus(20)
+bonuses[b3.__class__] += b3
+print(bonuses)

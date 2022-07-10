@@ -19,9 +19,14 @@ class Employee:
         self.worked_hours = hours
 
 
+
+
 class Bonus:
     def __init__(self, value):
         self.value = value
+
+    def __add__(self, other):
+        return self.__class__(self.value + other.value)
 
 
 class ValueBonus(Bonus):
@@ -41,18 +46,21 @@ class PercentBonus(Bonus):
 class PremiumEmployee(Employee):
     def __init__(self, name, rate_per_hour):
         super().__init__(name, rate_per_hour)
-        self.bonuses = []
+        self.bonuses = {}
 
     def pay_salary(self):
         to_pay = super().pay_salary()
 
-        for bonus in sorted(self.bonuses, key=lambda x: x.order):
+        for bonus in sorted(self.bonuses.values(), key=lambda x: x.order):
             to_pay = bonus.calculate(to_pay)
 
         return to_pay
 
     def give_bonus(self, bonus: Bonus):
-        self.bonuses.append(bonus)
+        if bonus.__class__ in self.bonuses:
+            self.bonuses[bonus.__class__] += bonus
+        else:
+            self.bonuses[bonus.__class__] = bonus
 
 
 def test_perecent_bonus():
@@ -68,6 +76,22 @@ def test_add_bonuses_together():
 
     assert b3.value == 300
     assert isinstance(b3, ValueBonus)
+
+    b1 = PercentBonus(10)
+    b2 = PercentBonus(20)
+
+    b3 = b1 + b2
+
+    assert b3.value == 30
+    assert isinstance(b3, PercentBonus)
+
+
+# zdaj powyzszy test
+# napisz analogiczny test dla PercentBonus
+# coupling (sparowanie)
+# cohesion (kohezja)
+# SOLID
+# https://www.youtube.com/results?search_query=arjan+codes
 
 
 def test_add_value_bonus():
