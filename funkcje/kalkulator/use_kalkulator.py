@@ -19,4 +19,3 @@ except:
     logger.error("Wystapił błąd", exc_info=True)
 
 
-%timeit
